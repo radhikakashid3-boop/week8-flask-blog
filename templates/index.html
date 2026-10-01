@@ -1,0 +1,331 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="hero-section">
+
+    <div class="row align-items-center">
+
+        <div class="col-lg-8">
+
+            <span class="hero-kicker">
+                WELCOME TO MY PERSONAL BLOG
+            </span>
+
+            <h1>
+                Learn. Build. Share.
+            </h1>
+
+            <p>
+                Explore Python, Flask, web development and
+                practical programming knowledge.
+            </p>
+
+
+            {% if current_user.is_authenticated %}
+
+                <a
+                    href="{{ url_for('posts.create') }}"
+                    class="btn btn-light btn-lg me-2"
+                >
+                    <i class="bi bi-plus-circle me-1"></i>
+                    Create New Post
+                </a>
+
+                <a
+                    href="{{ url_for('posts.list_posts') }}"
+                    class="btn btn-outline-light btn-lg"
+                >
+                    Explore Posts
+                </a>
+
+            {% else %}
+
+                <a
+                    href="{{ url_for('auth.register') }}"
+                    class="btn btn-light btn-lg me-2"
+                >
+                    Get Started
+                </a>
+
+                <a
+                    href="{{ url_for('auth.login') }}"
+                    class="btn btn-outline-light btn-lg"
+                >
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+
+        <div class="col-lg-4 text-center d-none d-lg-block">
+
+            <i class="bi bi-journal-richtext hero-icon"></i>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<div class="card search-card mb-5">
+
+    <div class="card-body">
+
+        <form
+            method="GET"
+            action="{{ url_for('main.index') }}"
+        >
+
+            <div class="input-group">
+
+                <input
+                    type="text"
+                    name="search"
+                    class="form-control"
+                    placeholder="Search posts by title or content..."
+                    value="{{ search }}"
+                >
+
+                <button
+                    type="submit"
+                    class="btn btn-primary px-4"
+                >
+                    <i class="bi bi-search me-1"></i>
+                    Search
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="section-heading">
+
+    <div>
+
+        <span class="section-label">
+            ARTICLES
+        </span>
+
+        <h2>
+            Latest Posts
+        </h2>
+
+        <p>
+            Discover the latest articles and ideas.
+        </p>
+
+    </div>
+
+
+    {% if current_user.is_authenticated %}
+
+        <a
+            href="{{ url_for('posts.create') }}"
+            class="btn btn-success"
+        >
+            <i class="bi bi-plus-lg me-1"></i>
+            New Post
+        </a>
+
+    {% endif %}
+
+</div>
+
+
+{% if search %}
+
+    <div class="search-result-note mb-4">
+        Showing results for:
+        <strong>{{ search }}</strong>
+    </div>
+
+{% endif %}
+
+
+<div class="row">
+
+    {% for post in posts.items %}
+
+        <div class="col-md-6 col-lg-4 mb-4">
+
+            <article class="card post-card h-100">
+
+                <div class="card-body d-flex flex-column">
+
+                    <span class="post-category">
+                        Python & Web
+                    </span>
+
+
+                    <h3 class="post-card-title">
+                        {{ post.title }}
+                    </h3>
+
+
+                    <div class="post-meta">
+
+                        <i class="bi bi-person"></i>
+                        {{ post.author.username }}
+
+                        <span>•</span>
+
+                        <i class="bi bi-calendar3"></i>
+                        {{ post.timestamp.strftime('%d %B %Y') }}
+
+                    </div>
+
+
+                    <p class="post-excerpt">
+                        {{ post.content[:180] }}
+
+                        {% if post.content|length > 180 %}
+                            ...
+                        {% endif %}
+                    </p>
+
+
+                    <a
+                        href="{{ url_for(
+                            'posts.detail',
+                            post_id=post.id
+                        ) }}"
+                        class="btn btn-outline-primary mt-auto"
+                    >
+                        Read Article
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+
+                </div>
+
+            </article>
+
+        </div>
+
+    {% else %}
+
+        <div class="col-12">
+
+            <div class="empty-state">
+
+                <i class="bi bi-journal-x"></i>
+
+                <h4>
+                    No posts found
+                </h4>
+
+                <p>
+                    {% if search %}
+                        Try another search term.
+                    {% else %}
+                        Be the first to publish an article.
+                    {% endif %}
+                </p>
+
+            </div>
+
+        </div>
+
+    {% endfor %}
+
+</div>
+
+
+{% if posts.pages > 1 %}
+
+    <nav
+        class="mt-4"
+        aria-label="Home pagination"
+    >
+
+        <ul class="pagination justify-content-center">
+
+            {% if posts.has_prev %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="{{ url_for(
+                            'main.index',
+                            page=posts.prev_num,
+                            search=search
+                        ) }}"
+                    >
+                        Previous
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+
+            {% for page_num in posts.iter_pages() %}
+
+                {% if page_num %}
+
+                    <li
+                        class="page-item
+                        {% if page_num == posts.page %}
+                            active
+                        {% endif %}"
+                    >
+
+                        <a
+                            class="page-link"
+                            href="{{ url_for(
+                                'main.index',
+                                page=page_num,
+                                search=search
+                            ) }}"
+                        >
+                            {{ page_num }}
+                        </a>
+
+                    </li>
+
+                {% else %}
+
+                    <li class="page-item disabled">
+                        <span class="page-link">...</span>
+                    </li>
+
+                {% endif %}
+
+            {% endfor %}
+
+
+            {% if posts.has_next %}
+
+                <li class="page-item">
+
+                    <a
+                        class="page-link"
+                        href="{{ url_for(
+                            'main.index',
+                            page=posts.next_num,
+                            search=search
+                        ) }}"
+                    >
+                        Next
+                    </a>
+
+                </li>
+
+            {% endif %}
+
+        </ul>
+
+    </nav>
+
+{% endif %}
+
+{% endblock %}
