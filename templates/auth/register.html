@@ -9,15 +9,15 @@
         <div class="card-body p-4 p-md-5">
 
             <div class="auth-icon">
-                <i class="bi bi-person-lock"></i>
+                <i class="bi bi-person-plus"></i>
             </div>
 
             <h1>
-                Welcome back
+                Create your account
             </h1>
 
             <p class="text-muted">
-                Sign in to continue to your account.
+                Join the blog and start sharing your ideas.
             </p>
 
 
@@ -34,10 +34,32 @@
 
                     {{ form.username(
                         class="form-control",
-                        placeholder="Enter your username"
+                        placeholder="Choose a username"
                     ) }}
 
                     {% for error in form.username.errors %}
+
+                        <div class="validation-message">
+                            {{ error }}
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+
+                <div class="mb-3">
+
+                    {{ form.email.label(
+                        class="form-label fw-semibold"
+                    ) }}
+
+                    {{ form.email(
+                        class="form-control",
+                        placeholder="Enter your email"
+                    ) }}
+
+                    {% for error in form.email.errors %}
 
                         <div class="validation-message">
                             {{ error }}
@@ -56,7 +78,7 @@
 
                     {{ form.password(
                         class="form-control",
-                        placeholder="Enter your password"
+                        placeholder="Create a password"
                     ) }}
 
                     {% for error in form.password.errors %}
@@ -70,29 +92,24 @@
                 </div>
 
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
+                <div class="mb-4">
 
-                    <div class="form-check">
+                    {{ form.password2.label(
+                        class="form-label fw-semibold"
+                    ) }}
 
-                        {{ form.remember_me(
-                            class="form-check-input"
-                        ) }}
+                    {{ form.password2(
+                        class="form-control",
+                        placeholder="Confirm your password"
+                    ) }}
 
-                        {{ form.remember_me.label(
-                            class="form-check-label"
-                        ) }}
+                    {% for error in form.password2.errors %}
 
-                    </div>
+                        <div class="validation-message">
+                            {{ error }}
+                        </div>
 
-
-                    <a
-                        href="{{ url_for(
-                            'auth.forgot_password'
-                        ) }}"
-                        class="small"
-                    >
-                        Forgot password?
-                    </a>
+                    {% endfor %}
 
                 </div>
 
@@ -110,14 +127,14 @@
 
             <div class="auth-footer">
 
-                Don't have an account?
+                Already have an account?
 
                 <a
                     href="{{ url_for(
-                        'auth.register'
+                        'auth.login'
                     ) }}"
                 >
-                    Create one
+                    Login
                 </a>
 
             </div>
