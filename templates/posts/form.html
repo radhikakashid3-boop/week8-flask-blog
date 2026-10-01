@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="create-post-page">
+
+    <div class="mb-4">
+
+        <span class="section-label">
+            BLOG EDITOR
+        </span>
+
+        <h1 class="fw-bold mt-2">
+            {{ title }}
+        </h1>
+
+        <p class="text-muted">
+            Create clear, useful and engaging content for your readers.
+        </p>
+
+    </div>
+
+
+    <div class="row g-4">
+
+        <div class="col-lg-8">
+
+            <div class="card editor-card">
+
+                <div class="card-body p-4 p-lg-5">
+
+                    <form method="POST">
+
+                        {{ form.hidden_tag() }}
+
+
+                        <div class="mb-4">
+
+                            {{ form.title.label(
+                                class="editor-label"
+                            ) }}
+
+                            {{ form.title(
+                                class="form-control editor-title",
+                                placeholder="Write an engaging title..."
+                            ) }}
+
+                            {% for error in form.title.errors %}
+
+                                <div class="validation-message">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <div class="mb-4">
+
+                            {{ form.content.label(
+                                class="editor-label"
+                            ) }}
+
+                            {{ form.content(
+                                class="form-control editor-content",
+                                rows=16,
+                                placeholder="Start writing your post..."
+                            ) }}
+
+                            {% for error in form.content.errors %}
+
+                                <div class="validation-message">
+                                    {{ error }}
+                                </div>
+
+                            {% endfor %}
+
+                        </div>
+
+
+                        <div class="publish-box mb-4">
+
+                            <div class="d-flex justify-content-between align-items-center">
+
+                                <div>
+
+                                    <h6 class="fw-bold mb-1">
+                                        Publishing
+                                    </h6>
+
+                                    <p class="text-muted small mb-0">
+                                        Make this post visible on your blog.
+                                    </p>
+
+                                </div>
+
+                                <div class="form-check form-switch">
+
+                                    {{ form.published(
+                                        class="form-check-input publish-switch"
+                                    ) }}
+
+                                    {{ form.published.label(
+                                        class="form-check-label"
+                                    ) }}
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="d-flex gap-2 flex-wrap">
+
+                            {{ form.submit(
+                                class="btn btn-primary btn-lg px-4"
+                            ) }}
+
+                            <a
+                                href="{{ url_for(
+                                    'posts.list_posts'
+                                ) }}"
+                                class="btn btn-light btn-lg px-4 border"
+                            >
+                                Cancel
+                            </a>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="col-lg-4">
+
+            <div class="card editor-side-card mb-4">
+
+                <div class="card-body p-4">
+
+                    <div class="side-icon">
+                        <i class="bi bi-lightbulb"></i>
+                    </div>
+
+                    <h5 class="fw-bold mt-3">
+                        Writing Tips
+                    </h5>
+
+                    <ul class="writing-tips">
+
+                        <li>
+                            Keep the title clear and specific.
+                        </li>
+
+                        <li>
+                            Use short paragraphs.
+                        </li>
+
+                        <li>
+                            Include practical examples.
+                        </li>
+
+                        <li>
+                            Review your post before publishing.
+                        </li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
